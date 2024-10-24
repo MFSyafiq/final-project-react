@@ -24,9 +24,13 @@ const DetailMenuPage = () => {
 
   const navigate = useNavigate();
 
-  const handleRedirect = () => {
+  const handleRedirectEdit = () => {
     navigate(`/edit-page`);
   };
+
+    const handleRedirectBack = () => {
+      navigate(`/menu-page`);
+    };
 
   return (
     <div>
@@ -59,12 +63,20 @@ const DetailMenuPage = () => {
               open-source projects, and mentoring aspiring developers through
               coding boot camps and workshops.
             </div>
-            <button
-              className="bg-blue-500 text-white rounded-lg p-2 w-full hover:bg-blue-600 transition-colors"
-              onClick={handleRedirect}
-            >
-              Edit
-            </button>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                className="bg-black text-white rounded-lg p-2 w-1/2 hover:bg-gray-700 transition-colors"
+                onClick={handleRedirectEdit}
+              >
+                Edit
+              </button>
+              <button
+                className="bg-red-700 text-white rounded-lg p-2 w-1/2 hover:bg-red-800 transition-colors"
+                onClick={handleRedirectBack}
+              >
+                Back
+              </button>
+            </div>
           </div>
         </div>
       </div>
