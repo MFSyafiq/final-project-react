@@ -1,9 +1,11 @@
-import DetailMenuPage from "../../pages/DetailMenuPage";
 import LandingPage from "../../pages/LandingPage";
-import EditPage from "../../pages/EditPage";
 import Register from "../../pages/Register";
-import MenuPage from "../../pages/MenuPage";
 import Login from "../../pages/Login";
+import AcitvityDetailPage from "../../pages/ActivityDetailPage";
+import MyTransactionPage from "../../pages/MyTransactionPage";
+import AllTransactionPage from "../../pages/AllTransactionPage";
+import CategoryManagePage from "../../pages/CategoryManagePage";
+import ActivityManagePage from "../../pages/ActivityManagePage";
 import { ProtectedRoute } from "./ProtectedRoute";
 
 export const route = [
@@ -11,26 +13,42 @@ export const route = [
   { path: "login", element: <Login /> },
   { path: "register", element: <Register /> },
   {
-    path: "menu-page",
+    path: "activity-detail/:id",
     element: (
       <ProtectedRoute>
-        <MenuPage />
+        <AcitvityDetailPage />
       </ProtectedRoute>
     ),
   },
   {
-    path: "menu-detail/:id",
+    path: "my-transaction-page",
     element: (
       <ProtectedRoute>
-        <DetailMenuPage />
+        <MyTransactionPage />
       </ProtectedRoute>
     ),
   },
   {
-    path: "edit-page",
+    path: "all-transaction-page",
     element: (
       <ProtectedRoute>
-        <EditPage />
+        <AllTransactionPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "category-manage-page",
+    element: (
+      <ProtectedRoute>
+        <CategoryManagePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "activity-manage-page",
+    element: (
+      <ProtectedRoute>
+        <ActivityManagePage />
       </ProtectedRoute>
     ),
   },

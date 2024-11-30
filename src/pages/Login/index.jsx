@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   const handleChangeEmail = (e) => {
@@ -20,17 +21,51 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  // Fungsi untuk mendapatkan data user
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axios.get(
+        "https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setUserData(response.data.data);
+
+      // Simpan role user di localStorage untuk penggunaan di komponen lain
+      console.log("response", response);
+      localStorage.setItem("userRole", response.data.data.role);
+      localStorage.setItem("userName", response.data.data.name);
+      localStorage.setItem("useEmail", response.data.data.email);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      if (err?.response?.status === 401) {
+        localStorage.removeItem("access_token");
+        navigate("/login");
+      }
+    }
+  };
+
   const handleLogin = () => {
     const payload = {
-      username: email,
+      email: email,
       password: password,
     };
 
     axios
-      .post("https://reqres.in/api/login", payload)
+      .post(
+        "https://sport-reservation-api-bootcamp.do.dibimbing.id/api/v1/login",
+        payload
+      )
       .then((res) => {
-        const token = res?.data?.token;
+        console.log("res", res);
+        const token = res?.data?.data?.token;
         localStorage.setItem("access_token", token);
+
+        // Setelah login berhasil, fetch data user
+        fetchUserData(token);
 
         setSuccess(true);
         setError(false);
@@ -40,10 +75,18 @@ const Login = () => {
         }, 3000);
       })
       .catch((err) => {
-        setError(err?.response.data.error);
+        setError(err?.response?.data?.error);
         setSuccess("");
       });
   };
+
+  // Cek token saat komponen dimount
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      fetchUserData(token);
+    }
+  }, []);
 
   return (
     <div>
@@ -66,6 +109,11 @@ const Login = () => {
           />
           {error && (
             <p className="text-red-400 font-bold text-center">{error}</p>
+          )}
+          {success && (
+            <p className="text-green-500 font-bold text-center">
+              Login successful! Redirecting...
+            </p>
           )}
 
           <div className="flex flex-col items-center">
